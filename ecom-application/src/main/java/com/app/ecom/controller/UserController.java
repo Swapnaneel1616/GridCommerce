@@ -1,7 +1,7 @@
 package com.app.ecom.controller;
 
+import com.app.ecom.dto.UserRequest;
 import com.app.ecom.dto.UserResponse;
-import com.app.ecom.model.User;
 import com.app.ecom.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,19 +22,19 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody User user){
-        return new ResponseEntity<>(userService.addNewUsers(user) , HttpStatus.CREATED);
+    public ResponseEntity<String> createUser(@RequestBody UserRequest userRequest){
+        return new ResponseEntity<>(userService.addNewUsers(userRequest) , HttpStatus.CREATED);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> getUserByID(@PathVariable Long id){
+    public ResponseEntity<UserResponse> getUserByID(@PathVariable Long id){
         return userService.fetchUserById(id).map(ResponseEntity::ok)
                 .orElseGet(()->ResponseEntity.notFound().build());
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id , @RequestBody User updatedUser){
-        boolean updated = userService.updateUser(id , updatedUser);
+    public ResponseEntity<?> updateUser(@PathVariable Long id , @RequestBody UserRequest updatedUserRequest){
+        boolean updated = userService.updateUser(id , updatedUserRequest);
         if (updated)
             return ResponseEntity.ok("User added successfully");
         return ResponseEntity.notFound().build();

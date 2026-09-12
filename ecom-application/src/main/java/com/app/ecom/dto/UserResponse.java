@@ -13,6 +13,6 @@ public class UserResponse {
     private String phone;
     private UserRole userRole;
 
-    private AddressDTO addressDTO;
+    private AddressDTO address;
 
 }

@@ -1,7 +1,9 @@
 package com.app.ecom.service;
 
 import com.app.ecom.dto.AddressDTO;
+import com.app.ecom.dto.UserRequest;
 import com.app.ecom.dto.UserResponse;
+import com.app.ecom.model.Address;
 import com.app.ecom.repository.UserRepository;
 import com.app.ecom.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,24 +25,43 @@ public class UserServiceImpl implements UserService {
                 collect(Collectors.toList()) ;
     }
 
-    public String addNewUsers(User user){
+    public String addNewUsers(UserRequest userRequest){
+        User user = new User();
+        updateUserFromRequest(user, userRequest);
         userRepository.save(user);
         return "User created successfully with id "+ user.getId();
     }
     @Override
-    public Optional<User> fetchUserById(Long id) {
-        return userRepository.findById(id);
+    public Optional<UserResponse> fetchUserById(Long id) {
+        return userRepository.findById(id).map(this::mapToUserResponse);
     }
 
     @Override
-    public boolean updateUser(Long id, User updatedUser) {
+    public boolean updateUser(Long id, UserRequest updatedUserRequest) {
         return userRepository.findById(id)
                 .map(existingUser ->{
-                    existingUser.setFirstName(updatedUser.getFirstName());
-                existingUser.setLastName(updatedUser.getLastName());
-                userRepository.save(existingUser);
+                    updateUserFromRequest(existingUser , updatedUserRequest);
+                    userRepository.save(existingUser);
                 return true;
                 }).orElse(false);
+    }
+
+
+    private void updateUserFromRequest(User user, UserRequest userRequest){
+        user.setFirstName(userRequest.getFirstName());
+        user.setLastName(userRequest.getLastName());
+        user.setEmail(userRequest.getEmail());
+        user.setPhone(userRequest.getPhone());
+
+        if(userRequest.getAddress() != null){
+            Address address = new Address();
+            address.setStreet(userRequest.getAddress().getStreet());
+            address.setCity(userRequest.getAddress().getCity());
+            address.setState(userRequest.getAddress().getState());
+            address.setCountry(userRequest.getAddress().getCountry());
+            address.setZipcode(userRequest.getAddress().getZipcode());
+            user.setAddress(address);
+        }
     }
 
     private UserResponse mapToUserResponse(User user){
@@ -60,7 +81,7 @@ public class UserServiceImpl implements UserService {
             addressDTO.setState(user.getAddress().getState());
             addressDTO.setCountry(user.getAddress().getCountry());
             addressDTO.setZipcode(user.getAddress().getZipcode());
-            response.setAddressDTO(addressDTO);
+            response.setAddress(addressDTO);
         }
 
         return response;
