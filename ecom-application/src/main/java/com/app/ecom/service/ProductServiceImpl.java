@@ -53,6 +53,13 @@ public class ProductServiceImpl implements  ProductService {
                 }).orElse(false);
     }
 
+    @Override
+    public List<ProductResponse> searchProducts(String keyword) {
+        return productRepository.searchProducts(keyword).stream()
+                .map(this::mapToProductResponse)
+                .collect(Collectors.toList());
+    }
+
 
     private ProductResponse mapToProductResponse(Product savedProduct){
         ProductResponse response = new ProductResponse();
