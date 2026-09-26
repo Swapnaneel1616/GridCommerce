@@ -25,6 +25,8 @@ public class UserServiceImpl implements UserService {
                 collect(Collectors.toList()) ;
     }
 
+    //Add new users
+
     public String addNewUsers(UserRequest userRequest){
         User user = new User();
         updateUserFromRequest(user, userRequest);
