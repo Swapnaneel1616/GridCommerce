@@ -2,9 +2,9 @@ spring:
   application:
     name: product-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: Neel@007
+    url: jdbc:postgresql://ep-dry-scene-b51p4zaq-pooler.c-7.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+    username: neondb_owner
+    password: npg_ge1YMEt4KkSA
   jpa:
     database: POSTGRESQL
     show-sql: true
